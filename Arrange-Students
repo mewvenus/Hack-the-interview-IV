@@ -1,0 +1,73 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+#
+# Complete the 'arrangeStudents' function below.
+#
+# The function is expected to return a STRING.
+# The function accepts following parameters:
+#  1. INTEGER_ARRAY a
+#  2. INTEGER_ARRAY b
+#
+
+def arrangeStudents(a, b):
+    # Write your code here
+    n = len(a)
+    if n == 1: # Case there is only 1 pair
+        answer = 'YES'
+    else:
+        if min(a) > min(b) and max(a) < max(b): # Starts with b ends with b >>> NO
+            answer = 'NO'
+        elif min(a) < min(b) and max(a) > max(b): # Starts with a ends with a >>> NO
+            answer = 'NO'
+        else:
+            j = 0
+            k = 0
+            a.sort()
+            b.sort()
+            if a[1] < min(b) or b[1] < min(a) or a[-2] > max(b) or b[-2] > max(a): 
+                answer = 'NO'
+            else:
+                for i in range(n):
+                    if a[i] > b[i]:
+                        if a[i-1] > b[i] and i > 0:
+                            answer = "NO"
+                            break
+                        else:
+                            k +=1
+                    elif a[i] < b[i]:
+                        if a[i] < b[i-1] and i > 0:
+                            answer = 'NO'
+                            break
+                        else:
+                            k -=1
+                    else:
+                        j +=1
+                if k+j == n or k-j == -n:
+                    answer = 'YES'
+                else:
+                    answer = 'NO'
+    return answer
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    t = int(input().strip())
+
+    for t_itr in range(t):
+        n = int(input().strip())
+
+        a = list(map(int, input().rstrip().split()))
+
+        b = list(map(int, input().rstrip().split()))
+
+        result = arrangeStudents(a, b)
+
+        fptr.write(result + '\n')
+
+    fptr.close()
